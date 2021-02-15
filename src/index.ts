@@ -9,6 +9,7 @@ import ora from 'ora';
 const client = new EC2Client({ region: "eu-west-2" });
 
 async function selectInstance(): Promise<void> {
+  info("Fetching instance list...");
   // TODO: Iterate over tokens
   const cmd = new DescribeInstancesCommand({ MaxResults: 1000 });
   const reservations = await client.send(cmd);
