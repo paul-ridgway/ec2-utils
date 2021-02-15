@@ -4,8 +4,7 @@
   "description": "A little utility to quickly manage ec2 instances from the command line",
   "main": "lib/index.js",
   "bin": {
-    "hct": "./lib/index.js",
-    "hub-clone-tool": "./lib/index.js"
+    "ec2utils": "./lib/index.js"
   },
   "scripts": {
     "start": "ts-node-dev --respawn --debug --transpile-only src/index.ts",
