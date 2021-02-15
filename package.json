@@ -1,0 +1,52 @@
+{
+  "name": "ec2-utils",
+  "version": "1.0.0",
+  "description": "A little utility to quickly manage ec2 instances from the command line",
+  "main": "lib/index.js",
+  "bin": {
+    "hct": "./lib/index.js",
+    "hub-clone-tool": "./lib/index.js"
+  },
+  "scripts": {
+    "start": "ts-node-dev --respawn --debug --transpile-only src/index.ts",
+    "build": "tsc -p .",
+    "check": "npm run compile && npm run lint:all",
+    "compile:watch": "tsc --watch --noEmit --skipLibCheck",
+    "compile": "tsc --noEmit --skipLibCheck",
+    "lint": "tslint --project .",
+    "lint:fix": "tslint --project . --fix",
+    "prettify": "prettier --write $(find src -name '*.ts')"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/paul-ridgway/ec2-utils.git"
+  },
+  "keywords": [
+    "ec2",
+    "utilities"
+  ],
+  "author": "Paul Ridgway",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/paul-ridgway/ec2-utils/issues"
+  },
+  "engines": {
+    "node": ">=10.0.0",
+    "npm": ">=6.0.0"
+  },
+  "homepage": "https://github.com/paul-ridgway/ec2-utils#readme",
+  "dependencies": {
+    "@aws-sdk/client-ec2": "^3.5.0",
+    "inquirer": "^7.3.3",
+    "npm": "^6.14.5"
+  },
+  "devDependencies": {
+    "@types/inquirer": "^7.3.1",
+    "@types/node": "^14.0.14",
+    "ts-node": "^8.10.2",
+    "ts-node-dev": "^1.0.0-pre.49",
+    "tslint": "^6.1.2",
+    "tslint-eslint-rules": "^5.4.0",
+    "typescript": "^3.9.5"
+  }
+}
