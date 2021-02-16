@@ -1,0 +1,1 @@
+export declare type Action = (instanceId: string) => Promise<void>;
