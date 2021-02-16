@@ -1,7 +1,8 @@
+#!/usr/bin/env node
+
 import { DescribeInstancesCommand, DescribeInstanceStatusCommand, EC2Client, Instance, RebootInstancesCommand, StartInstancesCommand, StopInstancesCommand } from "@aws-sdk/client-ec2";
 import inquirer from "inquirer";
 import { info } from "./utils/logger";
-import ora from 'ora';
 import { reboot } from "./functions/reboot";
 import { forceStopReboot } from "./functions/force-stop-and-reboot";
 import { resize } from "./functions/resize";
