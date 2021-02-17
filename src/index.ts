@@ -9,9 +9,16 @@ import { resize } from "./functions/resize";
 import { viewDetails } from "./functions/view-details";
 import { getClient } from "./utils/ec2-client-provider";
 import { Action } from "./functions/functions";
-
+import autocomplete from 'inquirer-autocomplete-prompt';
+import Choice from "inquirer/lib/objects/choice";
+import fuzzy from 'fuzzy';
+import { inspect } from "util";
 // TODO: Profile select
 // TODO: Properly handle regions?
+
+inquirer.registerPrompt('autocomplete', autocomplete);
+
+declare type InstanceEntry = { name: string, value: string; };
 
 async function selectInstance(): Promise<string> {
   const client = getClient();
@@ -21,7 +28,7 @@ async function selectInstance(): Promise<string> {
   const reservations = await client.send(cmd);
   const instances = reservations.Reservations!.map((r): Instance[] => r.Instances ?? []).flat();
   const statuses = await client.send(new DescribeInstanceStatusCommand({ InstanceIds: instances.filter((i): boolean => !!i.InstanceId).map((i): string => i.InstanceId!) }));
-  const instanceList: { name: string, value: string; }[] = [];
+  const instanceList: InstanceEntry[] = [];
   instances.forEach((i): void => {
     const tags = i.Tags ?? [];
     const name = tags
@@ -38,10 +45,16 @@ async function selectInstance(): Promise<string> {
   const prompt = await inquirer
     .prompt([
       {
-        type: 'list',
+        type: 'autocomplete',
         name: 'instance',
-        message: 'Select an instance',
-        choices: instanceList,
+        message: 'Select an instance (type to filter)',
+        source: (_: any, input: string): Promise<InstanceEntry[]> => {
+          input = input || "";
+          return new Promise((res): void => {
+            const results = fuzzy.filter<InstanceEntry>(input, instanceList, { extract: (e): string => e.name });
+            return res(results.map((e): InstanceEntry => e.original));
+          });
+        }
       }]);
   return prompt.instance;
 }
