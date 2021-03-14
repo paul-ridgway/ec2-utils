@@ -1,8 +1,9 @@
-import { EC2Client, RebootInstancesCommand } from "@aws-sdk/client-ec2";
+import { RebootInstancesCommand } from "@aws-sdk/client-ec2";
+import { getClient } from "../utils/ec2-client-provider";
 import { info } from "../utils/logger";
 
-export async function reboot(client: EC2Client, instanceId: string): Promise<void> {
+export async function reboot(instanceId: string): Promise<void> {
   info("Issuing a reboot over the API");
-  await client.send(new RebootInstancesCommand({ InstanceIds: [instanceId] }));
+  await getClient().send(new RebootInstancesCommand({ InstanceIds: [instanceId] }));
   info("Command succeeded");
 }
