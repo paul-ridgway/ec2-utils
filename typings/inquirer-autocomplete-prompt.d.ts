@@ -1,3 +1,5 @@
+//PDR: Borrowed from the internet
+
 // TypeScript definition for the package
 declare module 'inquirer-autocomplete-prompt' {
 
