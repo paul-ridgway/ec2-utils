@@ -13,6 +13,7 @@ import autocomplete from 'inquirer-autocomplete-prompt';
 import Choice from "inquirer/lib/objects/choice";
 import fuzzy from 'fuzzy';
 import { inspect } from "util";
+import { start } from "./functions/start";
 // TODO: Profile select
 // TODO: Properly handle regions?
 
@@ -69,6 +70,7 @@ async function selectAction(): Promise<Action> {
       choices: [
         { name: 'View Details', value: viewDetails },
         { name: 'Resize', value: resize },
+        { name: 'Start', value: start },
         { name: 'Reboot', value: reboot },
         { name: 'Force (stop) reboot', value: forceStopReboot }
       ],
