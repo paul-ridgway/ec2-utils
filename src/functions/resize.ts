@@ -1,4 +1,4 @@
-import { DescribeInstancesCommand, DescribeInstanceTypesCommand, EC2Client, Instance, ModifyInstanceAttributeCommand, RebootInstancesCommand } from "@aws-sdk/client-ec2";
+import { DescribeInstancesCommand, DescribeInstanceTypesCommand, DescribeInstanceTypesResult, EC2Client, Instance, InstanceTypeInfo, ModifyInstanceAttributeCommand, RebootInstancesCommand } from "@aws-sdk/client-ec2";
 import inquirer from "inquirer";
 import { getClient } from "../utils/ec2-client-provider";
 import { error, info } from "../utils/logger";
@@ -30,9 +30,18 @@ export const resize: Action = async (instanceId: string): Promise<void> => {
 };
 
 async function selectSize(currentSize: string): Promise<string> {
-  // TODO: loop tokens
-  const types = await getClient().send(new DescribeInstanceTypesCommand({ MaxResults: 100 }));
-  const choices = (types.InstanceTypes ?? [])
+  const instanceTypes: InstanceTypeInfo[] = [];
+  let next;
+  do {
+    const types: DescribeInstanceTypesResult = await getClient().send(new DescribeInstanceTypesCommand({ MaxResults: 100, NextToken: next }));
+    if (types.InstanceTypes) {
+      instanceTypes.push(...types.InstanceTypes);
+    }
+    next = types.NextToken;
+  } while (next);
+
+  // TODO: Autocomplete
+  const choices = (instanceTypes ?? [])
     .filter((t): boolean => !!t.InstanceType)
     .map((t): { name: string, value: string; } => ({
       name: t.InstanceType!,
